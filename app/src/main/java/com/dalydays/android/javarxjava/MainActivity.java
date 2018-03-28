@@ -23,14 +23,14 @@ public class MainActivity extends AppCompatActivity {
         // the observable emits (pushes) data to the subscriber
         Observable<String> myStrings = Observable.just("alpha", "beta", "gamma", "delta", "epsilon");
         // observe the observable - print each value as it's emitted
-        disposables.add(myStrings.subscribe(s -> System.out.println(s)));
+        disposables.add(myStrings.subscribe(System.out::println));
         // map the emitted value from the string to its length, then print that
-        disposables.add(myStrings.map(s -> s.length()).subscribe(s -> System.out.println(s)));
+        disposables.add(myStrings.map(String::length).subscribe(System.out::println));
 
         // this observable emits a value every second, starting at 0 and incrementing by 1 each time
         Observable<Long> secondIntervals = Observable.interval(1, TimeUnit.SECONDS);
         // print the value emitted from the observable
-        disposables.add(secondIntervals.subscribe(s -> System.out.println(s)));
+        disposables.add(secondIntervals.subscribe(System.out::println));
 
         // wait 5 seconds while the secondIntervals observable emits values (should emit 5 values, once per second)
         try {
