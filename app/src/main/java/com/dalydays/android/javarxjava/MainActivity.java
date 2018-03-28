@@ -5,11 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,17 +46,12 @@ public class MainActivity extends AppCompatActivity {
         // this observable emits a value every second, starting at 0 and incrementing by 1 each time
         Observable<Long> secondIntervals = Observable.interval(1, TimeUnit.SECONDS);
         // print the value emitted from the observable
-        disposables.add(secondIntervals.subscribe(System.out::println));
-
-        // wait 5 seconds while the secondIntervals observable emits values (should emit 5 values, once per second)
-        try {
-            Thread.sleep(5000);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return;
+        disposables.add(secondIntervals
+                // run this on a background thread
+                .subscribeOn(Schedulers.io())
+                // and observe on the main thread
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(System.out::println));
     }
 
     private void quitApp() {
@@ -64,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // show the number of disposables
+        Toast.makeText(this, "Size of disposables: " + disposables.size(), Toast.LENGTH_LONG).show();
         // make sure we dispose of all disposables before the app is destroyed so we don't leave things hanging
         disposables.dispose();
     }
