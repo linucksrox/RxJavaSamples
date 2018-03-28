@@ -3,7 +3,8 @@ package com.dalydays.android.javarxjava;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.util.Log;
+import android.widget.Button;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,8 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "RxJavaExamples";
+
     // this keeps track of the observable subscriptions
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -19,6 +22,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button example1Button = findViewById(R.id.btn_example1);
+        example1Button.setOnClickListener(view -> runExample1Observables());
+
+        Button quitButton = findViewById(R.id.btn_quit);
+        quitButton.setOnClickListener(view -> quitApp());
+    }
+
+    private void runExample1Observables() {
+        Log.i(TAG, "Running example 1");
 
         // the observable emits (pushes) data to the subscriber
         Observable<String> myStrings = Observable.just("alpha", "beta", "gamma", "delta", "epsilon");
@@ -40,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Toast.makeText(this, "Done emitting values, quitting now", Toast.LENGTH_LONG).show();
+        return;
+    }
 
+    private void quitApp() {
         // quit our app
         finish();
     }
