@@ -46,12 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // this observable emits a value every second, starting at 0 and incrementing by 1 each time
         Observable<Long> secondIntervals = Observable.interval(1, TimeUnit.SECONDS);
         // print the value emitted from the observable
-        disposables.add(secondIntervals
-                // run this on a background thread
-                .subscribeOn(Schedulers.io())
-                // and observe on the main thread
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(System.out::println));
+        disposables.add(secondIntervals.subscribe(System.out::println));
     }
 
     private void quitApp() {
