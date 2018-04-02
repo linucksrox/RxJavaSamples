@@ -32,14 +32,14 @@ class MainActivity : AppCompatActivity() {
         // the observable emits (pushes) data to the subscriber
         val myStrings = Observable.just("alpha", "beta", "gamma", "delta", "epsilon")
         // observe the observable - print each value as it's emitted
-        disposables.add(myStrings.subscribe { println(it) } )
+        disposables.add(myStrings.subscribe(::println))
         // map the emitted value from the string to its length, then print that
-        disposables.add(myStrings.map { it.length } .subscribe { println(it) } )
+        disposables.add(myStrings.map { it.length } .subscribe(::println))
 
         // this observable emits a value every second, starting at 0 and incrementing by 1 each time
         val secondIntervals = Observable.interval(1, TimeUnit.SECONDS)
         // print the value emitted from the observable
-        disposables.add(secondIntervals.subscribe { println(it) } )
+        disposables.add(secondIntervals.subscribe(::println))
     }
 
     override fun onDestroy() {
